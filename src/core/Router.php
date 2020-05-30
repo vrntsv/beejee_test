@@ -61,6 +61,7 @@ class Router
         if($this->hasRoute($routeName) and $_SERVER['REQUEST_METHOD'] == $this->routes[$routeName]['method']) {
             $data = $this->routes[$routeName];
             if (!empty($this->getParams($this->request))){
+                var_dump($this->getParams($this->request));
                 call_user_func(array($data['controller_name'], $data['function_name']), $this->getParams($this->request)[1]);
             } else {
                 call_user_func(array($data['controller_name'], $data['function_name']));
