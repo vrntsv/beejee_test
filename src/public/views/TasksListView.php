@@ -1,7 +1,16 @@
 
 <!-- Page Content -->
 <div class="container">
-
+    <?php
+    if ($data['postAdded'])
+    {
+        echo '
+        <div class="alert alert-success" role="alert">
+              Succesfully added new task!
+        </div>
+        ';
+    }
+    ?>
     <div class="dropdown show">
 
             <?php if (!empty($data['tasks'])): ?>
@@ -9,26 +18,48 @@
                     Filter
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <form action="/filterByEmail/1" method="get">
+                    <form action="/orderByEmail/1" method="get">
                         <div class="form-group px-4 py-3">
-                            <label for="exampleDropdownFormEmail1">Search by email</label>
-                            <input  name="email" type="text" class="form-control" id="exampleDropdownFormEmail1" placeholder="Enter email">
-                            <button type="submit" class="btn btn-primary">Search</button>
+                            <input  name="email" type="hidden" value="1" class="form-control" id="exampleDropdownFormEmail1" placeholder="Enter name">
+                            <button type="submit" class="btn btn-primary">Order by email (A-Z)</button>
+
+                        </div>
+                    </form>
+                    <form action="/orderByEmailDesc/1" method="get">
+                        <div class="form-group px-4 py-3">
+                            <input  name="email" type="hidden" value="1" class="form-control" id="exampleDropdownFormEmail1" placeholder="Enter name">
+                            <input  name="reverse" type="hidden" value="1" class="form-control" >
+                            <button type="submit" class="btn btn-primary">Order by email (Z-A)</button>
+
                         </div>
                     </form>
                     <div class="dropdown-divider"></div>
-                    <form action="/filterByName/1" method="get">
+                    <form action="/orderByName/1" method="get">
                         <div class="form-group px-4 py-3">
-                            <label for="exampleDropdownFormEmail1">Search by name</label>
-                            <input  name="name" type="text" class="form-control" id="exampleDropdownFormEmail1" placeholder="Enter name">
-                            <button type="submit" class="btn btn-primary">Search</button>
+                            <input  name="name" type="hidden" value="1" class="form-control" id="exampleDropdownFormEmail1" placeholder="Enter name">
+                            <button type="submit" class="btn btn-primary">Order by name (A-Z)</button>
+                        </div>
+                    </form>
+                    <form action="/orderByNameDesc/1" method="get">
+                        <div class="form-group px-4 py-3">
+                            <input  name="name" type="hidden" value="1" class="form-control" id="exampleDropdownFormEmail1" placeholder="Enter name">
+                            <input  name="reverse" type="hidden" value="1" class="form-control" >
+                            <button type="submit" class="btn btn-primary">Order by name (Z-A)</button>
+
                         </div>
                     </form>
                     <div class="dropdown-divider"></div>
-                    <form action="/filterByDone/1" method="get">
+                    <form action="/orderByDone/1" method="get">
                         <div class="form-group px-4 py-3">
                             <input  name="is_done" type="hidden" value="1" class="form-control" id="exampleDropdownFormEmail1" placeholder="Enter name">
-                            <button type="submit" class="btn btn-primary">Search done tasks</button>
+                            <button type="submit" class="btn btn-primary">Search done tasks (Not done - Done)</button>
+                        </div>
+                    </form>
+                    <form action="/orderByDoneDesc/1" method="get">
+                        <div class="form-group px-4 py-3">
+                            <input  name="is_done" type="hidden" value="1" class="form-control" id="exampleDropdownFormEmail1" placeholder="Enter name">
+                            <input  name="reverse" type="hidden" value="1" class="form-control" >
+                            <button type="submit" class="btn btn-primary">Search done tasks (Done - Not done)</button>
                         </div>
                     </form>
                 </div>

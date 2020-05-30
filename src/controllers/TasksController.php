@@ -12,42 +12,73 @@ class TasksController extends Controller
     }
 
 
-    public static function renderAllTasks($currentPage=1)
+    public static function renderAllTasks($currentPage=1, $postAdded=false)
     {
         $taskModel = new \TasksModel();
 
         $taskList = $taskModel->getTasks($currentPage);
         $lastPage = $taskModel->getLastPage();
         $view = new \app\core\View();
-        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'page', 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
+        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'page', 'postAdded'=>$postAdded, 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
     }
 
     public static function renderAllTasksByEmail($currentPage=1)
     {
         $taskModel = new \TasksModel();
-        $taskList = $taskModel->getTasks($currentPage, $email = $_GET['email']);
-        $lastPage = $taskModel->getLastPageFilterByEmail($_GET['email']);
+
+        $taskList = $taskModel->getTasks($currentPage, false, true);
+        $lastPage = $taskModel->getLastPage();
         $view = new \app\core\View();
-        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'filterByEmail', 'uriParams'=>'email='.$_GET['email'], 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
+        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'orderByEmail', 'uriParams'=>'email=1', 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
+    }
+
+    public static function renderAllTasksByEmailDesc($currentPage=1)
+    {
+        $taskModel = new \TasksModel();
+
+        $taskList = $taskModel->getTasks($currentPage, true, true);
+        $lastPage = $taskModel->getLastPage();
+        $view = new \app\core\View();
+        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'orderByEmailDesc', 'uriParams'=>'email=1?reverse=1', 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
     }
 
     public static function renderAllTasksByName($currentPage=1)
     {
         $taskModel = new \TasksModel();
-        $taskList = $taskModel->getTasks($currentPage,  null,  $_GET['name'],null);
-        $lastPage = $taskModel->getLastPageFilterByName($_GET['name']);
+        $taskList = $taskModel->getTasks($currentPage, false, null,  true,null);
+        $lastPage = $taskModel->getLastPage();
         $view = new \app\core\View();
-        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'filterByName', 'uriParams'=>'name='.$_GET['name'], 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
+        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'orderByName', 'uriParams'=>'name=1', 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
+    }
+
+    public static function renderAllTasksByNameDesc($currentPage=1)
+    {
+        $taskModel = new \TasksModel();
+        $taskList = $taskModel->getTasks($currentPage, true, null,  true,null);
+        $lastPage = $taskModel->getLastPage();
+        $view = new \app\core\View();
+        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'orderByNameDesc', 'uriParams'=>'name=1?reverse=1', 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
     }
 
     public static function renderAllTasksByDone($currentPage=1)
     {
         $taskModel = new \TasksModel();
-        $taskList = $taskModel->getTasks($currentPage, null, null, true);
-        $lastPage = $taskModel->getLastPageFilterByDone();
+        $taskList = $taskModel->getTasks($currentPage, false, null, null, true);
+        $lastPage = $taskModel->getLastPage();
         $view = new \app\core\View();
-        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'filterByDone', 'uriParams'=>'is_done=1', 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
+        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'orderByDone', 'uriParams'=>'is_done=1', 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
     }
+
+    public static function renderAllTasksByDoneDesc($currentPage=1)
+    {
+        $taskModel = new \TasksModel();
+        $taskList = $taskModel->getTasks($currentPage, true, null, null, true);
+        $lastPage = $taskModel->getLastPage();
+        $view = new \app\core\View();
+        $view->generate('TasksListView', ['current_page'=> $currentPage, 'uri'=>'orderByDoneDesc', 'uriParams'=>'is_done=1?reverse=1', 'tasks'=>$taskList, 'last_page'=>$lastPage], 'BaseView');
+    }
+
+
 
     public static function createTask($errors=null, $oldValues=null)
     {
@@ -88,7 +119,7 @@ class TasksController extends Controller
         }
         $taskModel = new \TasksModel();
         $taskModel->store($_POST['name'], $_POST['email'], $_POST['text']);
-        header('Location: /page/1');
+        self::renderAllTasks(1, true);
 
     }
 
